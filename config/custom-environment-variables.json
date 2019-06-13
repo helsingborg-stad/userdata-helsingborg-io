@@ -1,0 +1,16 @@
+{
+  "LOG": {
+    "LEVEL": "LOG_LEVEL"
+  },
+  "SERVER": {
+    "PORT": "SERVER_PORT"
+  },
+  "MYSQL": {
+    "HOST": "MYSQL_HOST",
+    "PORT": "MYSQL_PORT",
+    "DB": "MYSQL_DB",
+    "CONNECTION_LIMIT": "MYSQL_CONNECTION_LIMIT",
+    "USER": "MYSQL_USER",
+    "PASSWORD": "MYSQL_PASSWORD"
+  }
+}

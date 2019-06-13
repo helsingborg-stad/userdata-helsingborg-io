@@ -1,0 +1,44 @@
+{
+  "name": "labsnodejsboiler",
+  "version": "0.0.1",
+  "description": "Boilerplate repository for nodejs based LABS projects.",
+  "main": "app.js",
+  "scripts": {
+    "start": "NODE_ENV=production node -r dotenv/config src/app.js",
+    "dev": "nodemon -r dotenv/config src/app.js | ./node_modules/.bin/pino-colada",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha src/components/**/*.test.js",
+    "test:watch": "./node_modules/.bin/mocha src/components/**/*.test.js --watch",
+    "lint": "./node_modules/eslint/bin/eslint.js src/**",
+    "migrate:latest": "./node_modules/.bin/knex --cwd src/db/ migrate:latest",
+    "migrate:rollback": "./node_modules/.bin/knex --cwd src/db/ migrate:rollback"
+  },
+  "author": "Helsingborg Stad",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-asserttype": "^1.0.5",
+    "chai-http": "^4.3.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.0",
+    "pino-colada": "^1.4.4"
+  },
+  "dependencies": {
+    "@hapi/joi": "^15.0.1",
+    "axios": "^0.18.0",
+    "body-parser": "^1.19.0",
+    "config": "^3.1.0",
+    "dotenv": "^8.0.0",
+    "easy-soap-request": "^2.5.0",
+    "express": "^4.16.4",
+    "express-pino-logger": "^4.0.0",
+    "knex": "^0.17.1",
+    "mysql": "^2.17.1",
+    "pino": "^5.12.5",
+    "redis": "^2.8.0",
+    "soap": "^0.27.1",
+    "swagger-ui-express": "^4.0.2"
+  }
+}
