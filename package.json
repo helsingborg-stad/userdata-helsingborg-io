@@ -1,7 +1,7 @@
 {
-  "name": "labsnodejsboiler",
+  "name": "userdata-helsingborg-io",
   "version": "0.0.1",
-  "description": "Boilerplate repository for nodejs based LABS projects.",
+  "description": "Users Data project with Navet connection.",
   "main": "app.js",
   "scripts": {
     "start": "NODE_ENV=production node -r dotenv/config src/app.js",
@@ -39,6 +39,9 @@
     "pino": "^5.12.5",
     "redis": "^2.8.0",
     "soap": "^0.27.1",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "xml": "^1.0.1",
+    "xml2js": "^0.4.19",
+    "xml2json": "^0.11.2"
   }
 }

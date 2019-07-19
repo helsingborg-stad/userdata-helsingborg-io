@@ -1,1 +1,19 @@
-{}
+{
+  "LOG": {
+    "LEVEL": "trace"
+  },
+  "SERVER": {
+    "PORT": "env_placeholder",
+    "komACrt":"env_placeholder",
+    "komAKey":"env_placeholder",
+    "passphrase":"env_placeholder"
+  },
+  "MYSQL": {
+    "HOST": "127.0.0.1",
+    "PORT": 3306,
+    "DB": "hbgworks_db",
+    "CONNECTION_LIMIT": 10,
+    "USER": "hbgworks_user",
+    "PASSWORD": "hbgworks_pw"
+  }
+}

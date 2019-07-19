@@ -63,9 +63,7 @@ const routes = () => {
 
   router.get('/', Validator(querySchema, 'query', true), async (req, res) => {
     try {
-      const { query } = req;
-      const result = await Persons.query(query);
-
+      const result = dal.getPerson(req.body);
       return res.json(result);
     } catch (err) {
       // Send back error in json.

@@ -3,7 +3,10 @@
     "LEVEL": "LOG_LEVEL"
   },
   "SERVER": {
-    "PORT": "SERVER_PORT"
+    "PORT": "PORT",
+    "komACrt":"komACrt",
+    "komAKey":"komAKey",
+    "passphrase":"passphrase"
   },
   "MYSQL": {
     "HOST": "MYSQL_HOST",
