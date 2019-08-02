@@ -6,7 +6,7 @@ const routes = () => {
   const router = express.Router();
 
   // Register route to api-layer.
-  router.use('/person', person());
+  router.use('/', person());
 
   return router;
 };

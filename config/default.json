@@ -6,7 +6,8 @@
     "PORT": "env_placeholder",
     "komACrt":"env_placeholder",
     "komAKey":"env_placeholder",
-    "passphrase":"env_placeholder"
+    "passphrase":"env_placeholder",
+    "WSDL":"WSDL"
   },
   "MYSQL": {
     "HOST": "127.0.0.1",

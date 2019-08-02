@@ -4,7 +4,7 @@ const pino = require('express-pino-logger');
 const swaggerUi = require('swagger-ui-express');
 const bodyParser = require('body-parser');
 const swaggerDocument = require('../swagger/swagger.js');
-const routes = require('./components/routes');
+const routes = require('./components/person/person.api');
 const logger = require('./utils/logger');
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(pino({ logger }));
 
 // Add routes to the app.
-app.get('/', (req, res) => res.send('Hello World!'));
+// app.get('/', (req, res) => res.send('User Data Information API!'));
 app.use(routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.

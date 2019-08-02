@@ -8,7 +8,7 @@
     "dev": "nodemon -r dotenv/config src/app.js | ./node_modules/.bin/pino-colada",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha src/components/**/*.test.js",
     "test:watch": "./node_modules/.bin/mocha src/components/**/*.test.js --watch",
-    "lint": "./node_modules/eslint/bin/eslint.js src/**",
+    "lint": "./node_modules/eslint/bin/eslint.js src/** --fix",
     "migrate:latest": "./node_modules/.bin/knex --cwd src/db/ migrate:latest",
     "migrate:rollback": "./node_modules/.bin/knex --cwd src/db/ migrate:rollback"
   },

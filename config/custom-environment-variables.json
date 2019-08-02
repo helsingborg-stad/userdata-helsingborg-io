@@ -6,7 +6,8 @@
     "PORT": "PORT",
     "komACrt":"komACrt",
     "komAKey":"komAKey",
-    "passphrase":"passphrase"
+    "passphrase":"passphrase",
+    "WSDL":"WSDL"
   },
   "MYSQL": {
     "HOST": "MYSQL_HOST",
