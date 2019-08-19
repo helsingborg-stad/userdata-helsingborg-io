@@ -3,6 +3,7 @@ const https = require('https');
 const fs = require('fs');
 const parser = require('xml2json');
 const config = require('config');
+const DB = require('../person/person.db');
 
 const url = 'https://www2.test.skatteverket.se/na/na_epersondata/V2/personpostXML';
 
@@ -34,7 +35,7 @@ const parseJSON = input => new Promise(
       if (posts.length >= 2) {
         const parsedTwice = posts[1].split('</ns0:');
         const resParsed = parser.toJson(parsedTwice[0]);
-        resolve(resParsed);
+        resolve(JSON.parse(resParsed));
       }
       resolve(input);
     } catch (error) {
@@ -67,8 +68,18 @@ const axiosClient = axios.create({
   },
 });
 
-exports.getPerson = async (request) => {
-  const xml = getRequestXml(request.id);
+const getPersonFromDatabase = async (id) => {
+  try {
+    DB.reset();
+    const user = DB.query(id);
+    return user;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getPersonNavet = async (id) => {
+  const xml = getRequestXml(id);
 
   try {
     const res = await axiosClient.post(url, xml);
@@ -80,4 +91,21 @@ exports.getPerson = async (request) => {
   } catch (error) {
     return parseJSONError(error.response.data);
   }
+};
+
+exports.getPerson = async (request) => {
+  console.log(request.id);
+  const dbUser = await getPersonFromDatabase(request.id);
+  console.log(dbUser);
+  if (dbUser) {
+    return {
+      from: 'DB',
+      user: dbUser,
+    };
+  }
+  const navetUser = await getPersonNavet(request.id);
+  return {
+    from: 'Navet',
+    user: navetUser,
+  };
 };

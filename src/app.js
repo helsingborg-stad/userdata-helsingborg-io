@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(pino({ logger }));
 
 // Add routes to the app.
-// app.get('/', (req, res) => res.send('User Data Information API!'));
+app.get('/', (req, res) => res.send('User Data Information API!'));
 app.use(routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
