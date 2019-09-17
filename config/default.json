@@ -4,9 +4,12 @@
   },
   "SERVER": {
     "PORT": "env_placeholder",
-    "komACrt":"env_placeholder",
-    "komAKey":"env_placeholder",
-    "passphrase":"env_placeholder",
+    "Pfx": "env_placeholder",
+    "OrderNr": "env_placeholder",
+    "OrgNr": "env_placeholder",
+    "navetEndpoint": "env_placeholder",
+    "navetXmlEndpoint": "env_placeholder",
+    "passphrase": "env_placeholder",
     "WSDL":"WSDL"
   },
   "MYSQL": {
@@ -18,3 +21,4 @@
     "PASSWORD": "hbgworks_pw"
   }
 }
+  

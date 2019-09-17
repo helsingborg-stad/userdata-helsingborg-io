@@ -4,8 +4,11 @@
   },
   "SERVER": {
     "PORT": "PORT",
-    "komACrt":"komACrt",
-    "komAKey":"komAKey",
+    "Pfx": "Pfx",
+    "OrderNr": "OrderNr",
+    "OrgNr": "OrgNr",
+    "navetEndpoint": "navetEndpoint",
+    "navetXmlEndpoint": "navetXmlEndpoint",
     "passphrase":"passphrase",
     "WSDL":"WSDL"
   },

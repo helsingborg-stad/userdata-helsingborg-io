@@ -8,7 +8,13 @@ const genericSchema = Joi.object().keys({
   person_nr: id.required(),
   first_name: Joi.string(),
   last_name: Joi.string(),
-  andringstidpunkt: Joi.number(),
+  email: Joi.string(),
+  device_id: Joi.string(),
+  telefon_nr: Joi.string(),
+  post_nr: Joi.number(),
+  post_ort: Joi.string(),
+  adress: Joi.string(),
+  updated_at: Joi.number(),
   created_at: date.required(),
 });
 
@@ -16,15 +22,7 @@ const postSchema = Joi.object().keys({
   person_nr: id.required(),
   first_name: Joi.string(),
   last_name: Joi.string(),
-  andringstidpunkt: Joi.number(),
-  created_at: date.required(),
-});
-
-const putSchema = Joi.object().keys({
-  person_nr: id.required(),
-  first_name: Joi.string(),
-  last_name: Joi.string(),
-  andringstidpunkt: Joi.number(),
+  updated_at: Joi.number(),
   created_at: date.required(),
 });
 
@@ -36,14 +34,13 @@ const responseSchema = Joi.object().keys({
   person_nr: id.required(),
   first_name: Joi.string(),
   last_name: Joi.string(),
-  andringstidpunkt: Joi.number(),
+  updated_at: Joi.number(),
   created_at: date.required(),
 });
 
 module.exports = {
   genericSchema,
   querySchema,
-  putSchema,
   postSchema,
   responseSchema,
 };

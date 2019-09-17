@@ -6,6 +6,7 @@ const MYSQL_DB = config.get('MYSQL.DB');
 const MYSQL_USER = config.get('MYSQL.USER');
 const MYSQL_PASSWORD = config.get('MYSQL.PASSWORD');
 const MYSQL_CONNECTION_LIMIT = config.get('MYSQL.CONNECTION_LIMIT');
+const bookshelf = require('bookshelf');
 
 const Knex = require('knex');
 
@@ -36,4 +37,5 @@ const extractQueryParts = (obj) => {
 module.exports = {
   client,
   extractQueryParts,
+  bookshelf: bookshelf(client),
 };
