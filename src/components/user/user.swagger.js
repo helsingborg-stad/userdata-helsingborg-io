@@ -70,13 +70,6 @@ const personPath = {
         description: 'The user id of the person',
         type: 'string',
       },
-      {
-        name: 'limit',
-        in: 'query',
-        description: 'The number of entities to fetch',
-        type: 'integer',
-        default: 10,
-      },
     ],
     responses: {
       200: {

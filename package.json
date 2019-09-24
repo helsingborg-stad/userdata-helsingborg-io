@@ -1,16 +1,18 @@
 {
-  "name": "labsnodejsboiler",
+  "name": "userdata-helsingborg-io",
   "version": "0.0.1",
-  "description": "Boilerplate repository for nodejs based LABS projects.",
+  "description": "Users Data project with Navet connection.",
   "main": "app.js",
   "scripts": {
     "start": "NODE_ENV=production node -r dotenv/config src/app.js",
     "dev": "nodemon -r dotenv/config src/app.js | ./node_modules/.bin/pino-colada",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha src/components/**/*.test.js",
     "test:watch": "./node_modules/.bin/mocha src/components/**/*.test.js --watch",
-    "lint": "./node_modules/eslint/bin/eslint.js src/**",
-    "migrate:latest": "./node_modules/.bin/knex --cwd src/db/ migrate:latest",
-    "migrate:rollback": "./node_modules/.bin/knex --cwd src/db/ migrate:rollback"
+    "lint": "./node_modules/eslint/bin/eslint.js src/** --fix",
+    "migrate:latest": "./node_modules/.bin/knex migrate:latest",
+    "migrate:rollback": "./node_modules/.bin/knex migrate:rollback",
+    "seed:run": "./node_modules/.bin/knex seed:run",
+    "setup": "node setup.js"
   },
   "author": "Helsingborg Stad",
   "license": "MIT",
@@ -27,18 +29,23 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "body-parser": "^1.19.0",
+    "bookshelf": "^1.0.0",
     "config": "^3.1.0",
     "dotenv": "^8.0.0",
     "easy-soap-request": "^2.5.0",
     "express": "^4.16.4",
     "express-pino-logger": "^4.0.0",
+    "json-schema-ref-parser": "^7.1.1",
     "knex": "^0.17.1",
     "mysql": "^2.17.1",
     "pino": "^5.12.5",
     "redis": "^2.8.0",
     "soap": "^0.27.1",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "xml": "^1.0.1",
+    "xml2js": "^0.4.19",
+    "xml2json": "^0.11.2"
   }
 }
