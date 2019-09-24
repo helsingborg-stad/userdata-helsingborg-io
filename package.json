@@ -9,8 +9,10 @@
     "test": "NODE_ENV=test ./node_modules/.bin/mocha src/components/**/*.test.js",
     "test:watch": "./node_modules/.bin/mocha src/components/**/*.test.js --watch",
     "lint": "./node_modules/eslint/bin/eslint.js src/** --fix",
-    "migrate:latest": "./node_modules/.bin/knex --cwd src/db/ migrate:latest",
-    "migrate:rollback": "./node_modules/.bin/knex --cwd src/db/ migrate:rollback"
+    "migrate:latest": "./node_modules/.bin/knex migrate:latest",
+    "migrate:rollback": "./node_modules/.bin/knex migrate:rollback",
+    "seed:run": "./node_modules/.bin/knex seed:run",
+    "setup": "node setup.js"
   },
   "author": "Helsingborg Stad",
   "license": "MIT",
@@ -27,7 +29,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^15.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "body-parser": "^1.19.0",
     "bookshelf": "^1.0.0",
     "config": "^3.1.0",
@@ -35,6 +37,7 @@
     "easy-soap-request": "^2.5.0",
     "express": "^4.16.4",
     "express-pino-logger": "^4.0.0",
+    "json-schema-ref-parser": "^7.1.1",
     "knex": "^0.17.1",
     "mysql": "^2.17.1",
     "pino": "^5.12.5",

@@ -1,0 +1,5 @@
+{
+  "/user/{personNr}": {
+    "$ref": "user.swagger.json"
+  }
+}

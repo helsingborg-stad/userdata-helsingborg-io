@@ -4,9 +4,10 @@ bookshelf.plugin('registry');
 
 const Users = bookshelf.Model.extend({
   tableName: 'users',
+  requireFetch: false,
   hasTimestamps: true,
 });
 
 module.exports = {
-  users: bookshelf.model('Users', Users),
+  Users,
 };

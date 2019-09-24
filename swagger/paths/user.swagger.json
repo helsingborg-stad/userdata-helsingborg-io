@@ -1,0 +1,134 @@
+{
+  "get": {
+    "tags": ["CRUD operations"],
+    "summary": "Get user by personNr",
+    "description": "Fetch user from DB with a specific person nummer",
+    "operationId": "queryUsersByPersonNr",
+    "parameters": [
+      {
+        "name": "personNr",
+        "in": "path",
+        "description": "The personNr of the user to be fetched.",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "responses": {
+      "200": {
+          "description": "",
+          "schema": {
+              "$ref": "../definitions/definitions.swagger.json#/success"
+          }
+        
+      },
+      "422": {
+        "description": "Validation Error",
+        "schema": {
+          "$ref": "../definitions/definitions.swagger.json#/failure"
+        }
+      }
+    }
+  },
+  "post": {
+    "tags": ["CRUD operations"],
+    "summary": "Create an user",
+    "description": "Create user ",
+    "operationId": "postUser",
+    "parameters": [
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Created user object",
+        "required": true,
+        "schema": {
+          "$ref":"../definitions/definitions.swagger.json#/user"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+          "description": "",
+          "schema": {
+              "$ref": "../definitions/definitions.swagger.json#/success"
+          }
+        
+      },
+      "422": {
+        "description": "Validation Error",
+        "schema": {
+          "$ref": "../definitions/definitions.swagger.json#/failure"
+        }
+      }
+    }
+  },
+  "delete": {
+    "tags": ["CRUD operations"],
+    "summary": "Delete user with personNr",
+    "description": "Detaild description",
+    "operationId": "deleteUsers",
+    "parameters": [
+      {
+        "name": "personNr",
+        "in": "path",
+        "description": "The personNr of the user to be deleted.",
+        "required": true,
+        "type": "string"
+      }
+    ],
+    "responses": {
+      "200": {
+          "description": "",
+          "schema": {
+              "$ref": "../definitions/definitions.swagger.json#/success"
+          }
+        
+      },
+      "422": {
+        "description": "Validation Error",
+        "schema": {
+          "$ref": "../definitions/definitions.swagger.json#/failure"
+        }
+      }
+    }
+  },
+  "put": {
+    "tags": ["CRUD operations"],
+    "summary": "Updated user",
+    "description": "This can only be done by the logged in user.",
+    "operationId": "updateUser",
+    "parameters": [
+      {
+        "name": "personNr",
+        "in": "path",
+        "description": "personNr of the user that need to be updated",
+        "required": true,
+        "type": "string"
+      },
+      {
+        "in": "body",
+        "name": "body",
+        "description": "Updated user object",
+        "required": true,
+        "schema": {
+          "$ref": "../definitions/definitions.swagger.json#/user"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+          "description": "",
+          "schema": {
+              "$ref": "../definitions/definitions.swagger.json#/success"
+          }
+        
+      },
+      "422": {
+        "description": "Validation Error",
+        "schema": {
+          "$ref": "../definitions/definitions.swagger.json#/failure"
+        }
+      }
+    }
+  }
+}
+
