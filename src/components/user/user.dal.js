@@ -3,7 +3,7 @@ const https = require('https');
 const fs = require('fs');
 const parser = require('xml2json');
 const { ResourceNotFoundError, InternalServerError } = require('../../utils/error');
-const { queryUsers, createUser } = require('./user.db');
+const { queryUser, createUser } = require('./user.db');
 
 const {
   OrderNr,
@@ -94,11 +94,11 @@ const getUserFromNavet = async (id) => {
 };
 
 const getUser = async (request) => {
-  const userFromDB = await queryUsers(request.id);
+  const userFromDB = await queryUser(request.id);
   if (!userFromDB) {
     const user = await getUserFromNavet(request.id);
     await createUser(user);
-    const savedUser = await queryUsers(request.id);
+    const savedUser = await queryUser(request.id);
     return {
       attributes: {
         id: request.id,
