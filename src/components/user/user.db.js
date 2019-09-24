@@ -2,7 +2,7 @@ const logger = require('../../utils/logger');
 const { ResourceNotFoundError } = require('../../utils/error');
 const { Users } = require('../../db/db.bookshelf');
 
-const queryUsers = async (personNr) => {
+const queryUser = async (personNr) => {
   const user = await Users.where('person_nr', personNr)
     .fetch()
     .then((res) => { logger.info('success'); return res; })
@@ -72,7 +72,7 @@ const updateUser = async (personNr, user) => {
 };
 
 module.exports = {
-  queryUsers,
+  queryUser,
   createUser,
   deleteUser,
   updateUser,

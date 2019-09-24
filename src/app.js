@@ -12,7 +12,7 @@ const logger = require('./utils/logger');
 const app = express();
 
 // Config
-const { SERVER_PORT } = process.env;
+const { PORT } = process.env;
 const API_BASE = '/api/v1';
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,8 +40,8 @@ jsonSchemaRefParser.dereference(swaggerDocument, (err, schema) => {
  */
 
 // Listen on port specfied in env-file.
-const server = app.listen(SERVER_PORT,
-  () => logger.info(`User Data api listening on port ${SERVER_PORT}!`));
+const server = app.listen(PORT,
+  () => logger.info(`User Data api listening on port ${PORT}!`));
 
 // Export server to use it in tests.
 module.exports = server;
