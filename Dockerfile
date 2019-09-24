@@ -1,6 +1,13 @@
 # Use node-alpine as a base (30x smaller size being the major selling point)
 FROM node:11.14.0-alpine
 
+# Install node modules
+# Install dependencies for alpine (python, make and g++) via apk
+RUN apk add --no-cache --virtual .gyp \
+        python \
+        make \
+        g++
+
 # Create the folder for the app and 
 RUN mkdir -p /usr/src/app
 
