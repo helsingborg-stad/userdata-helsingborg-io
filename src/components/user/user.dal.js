@@ -60,7 +60,7 @@ const parseJSONError = input => new Promise(
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
-    Pfx: fs.readFileSync(PFX),
+    pfx: fs.readFileSync(PFX),
     PASSPHRASE,
   }),
   headers: {
