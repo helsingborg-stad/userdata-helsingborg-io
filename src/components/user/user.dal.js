@@ -6,21 +6,21 @@ const { ResourceNotFoundError, InternalServerError } = require('../../utils/erro
 const { queryUser, createUser } = require('./user.db');
 
 const {
-  OrderNr,
-  OrgNr,
-  navetXmlEndpoint,
-  navetEndpoint,
-  Pfx,
-  passphrase,
+  ORDER_NR,
+  ORG_NR,
+  NAVET_XML_ENDPOINT,
+  NAVET_ENDPOINT,
+  PFX,
+  PASSPHRASE,
 } = process.env;
 
-const getRequestXml = id => (`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="${navetXmlEndpoint}">
+const getRequestXml = id => (`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="${NAVET_XML_ENDPOINT}">
   <soapenv:Header/>
   <soapenv:Body>
     <v1:PersonpostRequest>
       <v1:Bestallning>
-        <v1:OrgNr>${OrgNr}</v1:OrgNr>
-        <v1:BestallningsId>${OrderNr}</v1:BestallningsId>
+        <v1:OrgNr>${ORG_NR}</v1:OrgNr>
+        <v1:BestallningsId>${ORDER_NR}</v1:BestallningsId>
       </v1:Bestallning>
       <v1:PersonId>${id}</v1:PersonId>
     </v1:PersonpostRequest>
@@ -60,8 +60,8 @@ const parseJSONError = input => new Promise(
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
-    pfx: fs.readFileSync(Pfx),
-    passphrase,
+    pfx: fs.readFileSync(PFX),
+    PASSPHRASE,
   }),
   headers: {
     'Content-Type': 'text/xml;charset=UTF-8',
@@ -73,7 +73,7 @@ const getUserFromNavet = async (id) => {
   const xml = getRequestXml(id);
 
   try {
-    const response = await axiosClient.post(navetEndpoint, xml);
+    const response = await axiosClient.post(NAVET_ENDPOINT, xml);
     if (!response || !response.data) throw new ResourceNotFoundError();
 
     const data = await parseJSON(response.data);
