@@ -1,61 +1,20 @@
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
-const parser = require('xml2json');
+const logger = require('../../utils/logger');
 const { ResourceNotFoundError, InternalServerError } = require('../../utils/error');
-const { queryUser, createUser } = require('./user.db');
+const { parseXml, parseJSONError, parseJSON } = require('../../utils/helpers');
+const jsonapi = require('../../jsonapi');
+const {
+  query, create,
+  erase, insert,
+} = require('./user.db');
 
 const {
-  ORDER_NR,
-  ORG_NR,
-  NAVET_XML_ENDPOINT,
   NAVET_ENDPOINT,
   PFX,
   PASSPHRASE,
 } = process.env;
-
-const getRequestXml = id => (`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="${NAVET_XML_ENDPOINT}">
-  <soapenv:Header/>
-  <soapenv:Body>
-    <v1:PersonpostRequest>
-      <v1:Bestallning>
-        <v1:OrgNr>${ORG_NR}</v1:OrgNr>
-        <v1:BestallningsId>${ORDER_NR}</v1:BestallningsId>
-      </v1:Bestallning>
-      <v1:PersonId>${id}</v1:PersonId>
-    </v1:PersonpostRequest>
-  </soapenv:Body>
-</soapenv:Envelope>`);
-
-const parseJSON = input => new Promise(
-  (resolve, reject) => {
-    try {
-      const posts = input.split('Folkbokforingsposter>');
-
-      // If result has any posts the length will be bigger then 2.
-      if (posts.length >= 2) {
-        const parsedTwice = posts[1].split('</ns0:');
-        const resParsed = parser.toJson(parsedTwice[0]);
-        resolve(JSON.parse(resParsed));
-      }
-      resolve(input);
-    } catch (error) {
-      reject(error);
-    }
-  },
-);
-
-const parseJSONError = input => new Promise(
-  (resolve, reject) => {
-    try {
-      const parsedOnce = input.split('<faultstring>');
-      const parsedTwice = parsedOnce[1].split('</faultstring>');
-      resolve(parsedTwice[0]);
-    } catch (error) {
-      reject(error);
-    }
-  },
-);
 
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
@@ -68,13 +27,15 @@ const axiosClient = axios.create({
   },
 });
 
-
+/**
+ * READ METHODS FOR USER DATA FROM NAVET
+ */
 const getUserFromNavet = async (id) => {
-  const xml = getRequestXml(id);
+  const xml = parseXml(id);
 
   try {
     const response = await axiosClient.post(NAVET_ENDPOINT, xml);
-    if (!response || !response.data) throw new ResourceNotFoundError();
+    if (!response || !response.data) return ResourceNotFoundError();
 
     const data = await parseJSON(response.data);
     const res = data.Folkbokforingspost;
@@ -89,31 +50,94 @@ const getUserFromNavet = async (id) => {
     };
     return user;
   } catch (error) {
-    throw new InternalServerError(parseJSONError(error.response.data));
+    return new InternalServerError(parseJSONError(error.response.data));
   }
 };
 
-const getUser = async (request) => {
-  const userFromDB = await queryUser(request.id);
-  if (!userFromDB) {
-    const user = await getUserFromNavet(request.id);
-    await createUser(user);
-    const savedUser = await queryUser(request.id);
-    return {
-      attributes: {
-        id: request.id,
-        ...savedUser.attributes,
-      },
-    };
+
+/**
+ * READ USER METHODS
+ */
+
+const getUser = async (id) => {
+  // Write method for fetching user data
+  try {
+    // Fetch data from DB.
+    const userFromDB = await query(id);
+
+    if (!userFromDB) {
+      // Fetch data from Navet.
+      const user = await getUserFromNavet(id);
+
+      // Save Data i DB
+      await create(user);
+      const savedUser = await query(id);
+
+      return jsonapi.serializer.serialize('user', savedUser.attributes);
+    }
+
+    return jsonapi.serializer.serialize('user', userFromDB.attributes);
+  } catch (error) {
+    logger.error(error);
+    const errorResponse = await jsonapi.serializer.serializeError(error);
+    return errorResponse;
   }
-  return {
-    attributes: {
-      id: request.id,
-      ...userFromDB.attributes,
-    },
-  };
 };
+
+const read = {
+  user: getUser,
+};
+
+
+/**
+ * UPDATE USER METHODS
+ */
+
+const updateUser = async (id, body) => {
+  // Write method for updating user data
+  try {
+    // Update user data to DB
+    await insert(id, body);
+
+    // Fetch data from DB.
+    const data = await query(id);
+
+    // Convert response to json before sending it.
+    return jsonapi.serializer.serialize('user', data.attributes);
+  } catch (error) {
+    logger.error(error);
+    const errorResponse = await jsonapi.serializer.serializeError(error);
+    return errorResponse;
+  }
+};
+
+const update = {
+  user: updateUser,
+};
+
+
+/**
+ * DELETE USER METHODS
+ */
+
+const deleteUser = async (id) => {
+  // Write method for deleting user
+  try {
+    return erase(id);
+  } catch (error) {
+    logger.error(error);
+    const errorResponse = await jsonapi.serializer.serializeError(error);
+    return errorResponse;
+  }
+};
+
+const del = {
+  ser: deleteUser,
+};
+
 
 module.exports = {
-  getUser,
+  read,
+  update,
+  del,
 };
