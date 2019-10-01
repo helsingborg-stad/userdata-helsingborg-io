@@ -1,4 +1,6 @@
 const parser = require('xml2json');
+const jsonapi = require('../jsonapi');
+const logger = require('./logger');
 
 const {
   ORDER_NR,
@@ -49,8 +51,23 @@ const parseJSONError = input => new Promise(
   },
 );
 
+const createErrorResponse = async (error, res) => {
+  logger.error(error);
+  logger.error(error);
+  const serializedData = await jsonapi.serializer.serializeError(error);
+  return res.status(error.status).json(serializedData);
+};
+
+const createSuccessResponse = async (data, res, jsonapiType, converter) => {
+  const convertData = await jsonapi.convert[converter](data);
+  const serializedData = await jsonapi.serializer.serialize(jsonapiType, convertData);
+  return res.json(serializedData);
+};
+
 module.exports = {
   parseXml,
   parseJSON,
   parseJSONError,
+  createErrorResponse,
+  createSuccessResponse,
 };

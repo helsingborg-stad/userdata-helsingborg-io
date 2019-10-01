@@ -1,20 +1,15 @@
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
-const logger = require('../../utils/logger');
 const { ResourceNotFoundError, InternalServerError } = require('../../utils/error');
-const { parseXml, parseJSONError, parseJSON } = require('../../utils/helpers');
-const jsonapi = require('../../jsonapi');
 const {
-  query, create,
-  erase, insert,
+  parseXml, parseJSONError, parseJSON, createErrorResponse, createSuccessResponse,
+} = require('../../utils/helpers');
+const {
+  query, create, erase, insert,
 } = require('./user.db');
 
-const {
-  NAVET_ENDPOINT,
-  PFX,
-  PASSPHRASE,
-} = process.env;
+const { NAVET_ENDPOINT, PFX, PASSPHRASE } = process.env;
 
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
@@ -59,12 +54,15 @@ const getUserFromNavet = async (id) => {
  * READ USER METHODS
  */
 
-const getUser = async (id) => {
+const getUser = async (req, res) => {
   // Write method for fetching user data
   try {
+    // retrieve params
+    const id = req.params.person_nr;
+
     // Fetch data from DB.
     const userFromDB = await query(id);
-
+    console.log(userFromDB.attributes);
     if (!userFromDB) {
       // Fetch data from Navet.
       const user = await getUserFromNavet(id);
@@ -73,14 +71,14 @@ const getUser = async (id) => {
       await create(user);
       const savedUser = await query(id);
 
-      return jsonapi.serializer.serialize('user', savedUser.attributes);
+      // Convert response to json before sending it.
+      return await createSuccessResponse(savedUser, res, 'user', 'queryData');
     }
 
-    return jsonapi.serializer.serialize('user', userFromDB.attributes);
+    // Convert response to json before sending it.
+    return await createSuccessResponse(userFromDB, res, 'user', 'queryData');
   } catch (error) {
-    logger.error(error);
-    const errorResponse = await jsonapi.serializer.serializeError(error);
-    return errorResponse;
+    return createErrorResponse(error, res);
   }
 };
 
@@ -93,21 +91,22 @@ const read = {
  * UPDATE USER METHODS
  */
 
-const updateUser = async (id, body) => {
+const updateUser = async (req, res) => {
   // Write method for updating user data
   try {
+    // retrieve params
+    const id = req.params.person_nr;
+
     // Update user data to DB
-    await insert(id, body);
+    await insert(id, req.body);
 
     // Fetch data from DB.
     const data = await query(id);
 
     // Convert response to json before sending it.
-    return jsonapi.serializer.serialize('user', data.attributes);
+    return await createSuccessResponse(data.attributes, res, 'user', 'queryData');
   } catch (error) {
-    logger.error(error);
-    const errorResponse = await jsonapi.serializer.serializeError(error);
-    return errorResponse;
+    return createErrorResponse(error, res);
   }
 };
 
@@ -120,14 +119,16 @@ const update = {
  * DELETE USER METHODS
  */
 
-const deleteUser = async (id) => {
+const deleteUser = async (req, res) => {
   // Write method for deleting user
   try {
+    // retrieve params
+    const id = req.params.person_nr;
+
+    // erase data from DB.
     return erase(id);
   } catch (error) {
-    logger.error(error);
-    const errorResponse = await jsonapi.serializer.serializeError(error);
-    return errorResponse;
+    return createErrorResponse(error, res);
   }
 };
 

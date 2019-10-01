@@ -1,25 +1,23 @@
-# labs-node-js-boilerplate
-Boilerplate repository for nodejs based LABS projects.
-
-This boilerplats is built on nodejs and express. It includes an example that showcases
-everything from how the app is set up to routing and validation.
+# User Information Microservice
+Api for Storing user information 
 
 ## Development
 Prerequisite: local MySQL server running
 
 1. Clone repository
 2. Install dependencies with npm install
-3. Create .env-file in the root folder with these properties
-````
-   PORT=3000 #(or any other port you prefer)
-   LOG_LEVEL=info #(trace, debug, info, warn, error, fatal, silent)
-````
-4. run ```npm run migrate:latest``` (this will migrate your mysql schemas to the latest version)
+3. run ```npm run setup``` (this will .env files for testing and development)
+4. run ```knex migrate:latest``` (this will migrate your mysql schemas to the latest version)
+5. run ```knex seed:run``` (this will seed your mockdata to your mysql)
 5. Run project with ```npm run dev```
 
 ## Documentation
 
-Documentation for apis built from this boilerplate should be split into two sections. Project related information should be written in the README-file for the repository, and specific instructions for calling the api should be documented with Swagger which is included in the project by default.
+Project related information is written in the README-file for the repository, and specific instructions for calling the api is documented with Swagger which is included in the project by default.
+
+
+## Swagger
+
 
 ### Tests
 
