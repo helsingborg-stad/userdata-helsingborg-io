@@ -1,6 +1,6 @@
 exports.up = knex => knex.schema.createTable('users', (t) => {
   t.increments('id').primary().unsigned();
-  t.integer('person_nr').notNull().unique();
+  t.string('person_nr', 12).notNull().unique();
   t.string('first_name').notNull();
   t.string('last_name').notNull();
   t.string('email');

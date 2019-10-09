@@ -10,10 +10,10 @@ const logger = require('./utils/logger');
 
 // Init App
 const app = express();
+const V1BASEPATH = '/api/v1';
 
 // Config
 const { PORT } = process.env;
-const API_BASE = '/api/v1';
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -21,8 +21,29 @@ app.use(bodyParser.json());
 // Request logging
 app.use(pino({ logger }));
 
+// Add root route for version information of the app.
+app.get('/', (req, res) => res.send({
+  jsonapi: {
+    version: '1.0',
+    meta: {
+      versions: [
+        {
+          version: '1',
+          basepath: '/api/v1/',
+          state: 'beta',
+          releasedate: null,
+        },
+      ],
+      build: '1.0.0',
+      service: 'userData-helsingborg-io',
+      owner: 'Helsingborg Stad',
+      description: 'Userdata service in helsingborg-io platform. Provides user Data information about example.',
+    },
+  },
+}));
+
 // Add routes to the app.
-app.use(routes());
+app.use(V1BASEPATH, routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
 jsonSchemaRefParser.dereference(swaggerDocument, (err, schema) => {
@@ -31,7 +52,7 @@ jsonSchemaRefParser.dereference(swaggerDocument, (err, schema) => {
   } else {
     // `schema` is just a normal JavaScript object that contains your entire JSON Schema,
     // including referenced files, combined into a single object
-    app.use(`${API_BASE}/api-docs`, swaggerUi.serve, swaggerUi.setup(schema));
+    app.use(`${V1BASEPATH}/api-docs`, swaggerUi.serve, swaggerUi.setup(schema));
   }
 });
 

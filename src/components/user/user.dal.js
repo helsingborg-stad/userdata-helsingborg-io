@@ -1,80 +1,36 @@
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
-const parser = require('xml2json');
 const { ResourceNotFoundError, InternalServerError } = require('../../utils/error');
-const { queryUsers, createUser } = require('./user.db');
-
 const {
-  OrderNr,
-  OrgNr,
-  navetXmlEndpoint,
-  navetEndpoint,
-  Pfx,
-  passphrase,
-} = process.env;
+  parseXml, parseJSONError, parseJSON, createErrorResponse, createSuccessResponse,
+} = require('../../utils/helpers');
+const {
+  query, create, erase, insert,
+} = require('./user.db');
 
-const getRequestXml = id => (`<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:v1="${navetXmlEndpoint}">
-  <soapenv:Header/>
-  <soapenv:Body>
-    <v1:PersonpostRequest>
-      <v1:Bestallning>
-        <v1:OrgNr>${OrgNr}</v1:OrgNr>
-        <v1:BestallningsId>${OrderNr}</v1:BestallningsId>
-      </v1:Bestallning>
-      <v1:PersonId>${id}</v1:PersonId>
-    </v1:PersonpostRequest>
-  </soapenv:Body>
-</soapenv:Envelope>`);
-
-const parseJSON = input => new Promise(
-  (resolve, reject) => {
-    try {
-      const posts = input.split('Folkbokforingsposter>');
-
-      // If result has any posts the length will be bigger then 2.
-      if (posts.length >= 2) {
-        const parsedTwice = posts[1].split('</ns0:');
-        const resParsed = parser.toJson(parsedTwice[0]);
-        resolve(JSON.parse(resParsed));
-      }
-      resolve(input);
-    } catch (error) {
-      reject(error);
-    }
-  },
-);
-
-const parseJSONError = input => new Promise(
-  (resolve, reject) => {
-    try {
-      const parsedOnce = input.split('<faultstring>');
-      const parsedTwice = parsedOnce[1].split('</faultstring>');
-      resolve(parsedTwice[0]);
-    } catch (error) {
-      reject(error);
-    }
-  },
-);
+const { NAVET_ENDPOINT, PFX, PASSPHRASE } = process.env;
 
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
-    pfx: fs.readFileSync(Pfx),
-    passphrase,
+    pfx: fs.readFileSync(PFX),
+    PASSPHRASE,
   }),
   headers: {
     'Content-Type': 'text/xml;charset=UTF-8',
   },
 });
 
-
+/**
+ * READ METHODS FOR USER DATA FROM NAVET
+ */
 const getUserFromNavet = async (id) => {
-  const xml = getRequestXml(id);
+  const xml = parseXml(id);
 
   try {
-    const response = await axiosClient.post(navetEndpoint, xml);
-    if (!response || !response.data) throw new ResourceNotFoundError();
+    const response = await axiosClient.post(NAVET_ENDPOINT, xml);
+    if (!response || !response.data) return ResourceNotFoundError();
 
     const data = await parseJSON(response.data);
     const res = data.Folkbokforingspost;
@@ -89,31 +45,100 @@ const getUserFromNavet = async (id) => {
     };
     return user;
   } catch (error) {
-    throw new InternalServerError(parseJSONError(error.response.data));
+    return new InternalServerError(parseJSONError(error.response.data));
   }
 };
 
-const getUser = async (request) => {
-  const userFromDB = await queryUsers(request.id);
-  if (!userFromDB) {
-    const user = await getUserFromNavet(request.id);
-    await createUser(user);
-    const savedUser = await queryUsers(request.id);
-    return {
-      attributes: {
-        id: request.id,
-        ...savedUser.attributes,
-      },
-    };
+
+/**
+ * READ USER METHODS
+ */
+
+const getUser = async (req, res) => {
+  // Write method for fetching user data
+  try {
+    // retrieve params
+    const id = req.params.person_nr;
+
+    // Fetch data from DB.
+    const userFromDB = await query(id);
+    console.log(userFromDB.attributes);
+    if (!userFromDB) {
+      // Fetch data from Navet.
+      const user = await getUserFromNavet(id);
+
+      // Save Data i DB
+      await create(user);
+      const savedUser = await query(id);
+
+      // Convert response to json before sending it.
+      return await createSuccessResponse(savedUser, res, 'user', 'queryData');
+    }
+
+    // Convert response to json before sending it.
+    return await createSuccessResponse(userFromDB, res, 'user', 'queryData');
+  } catch (error) {
+    return createErrorResponse(error, res);
   }
-  return {
-    attributes: {
-      id: request.id,
-      ...userFromDB.attributes,
-    },
-  };
 };
+
+const read = {
+  user: getUser,
+};
+
+
+/**
+ * UPDATE USER METHODS
+ */
+
+const updateUser = async (req, res) => {
+  // Write method for updating user data
+  try {
+    // retrieve params
+    const id = req.params.person_nr;
+
+    // Update user data to DB
+    await insert(id, req.body);
+
+    // Fetch data from DB.
+    const data = await query(id);
+
+    // Convert response to json before sending it.
+    return await createSuccessResponse(data.attributes, res, 'user', 'queryData');
+  } catch (error) {
+    return createErrorResponse(error, res);
+  }
+};
+
+const update = {
+  user: updateUser,
+};
+
+
+/**
+ * DELETE USER METHODS
+ */
+
+const deleteUser = async (req, res) => {
+  // Write method for deleting user
+  try {
+    // retrieve params
+    const id = req.params.person_nr;
+
+    // erase data from DB.
+    return erase(id);
+  } catch (error) {
+    return createErrorResponse(error, res);
+  }
+};
+
+const del = {
+  ser: deleteUser,
+};
+
 
 module.exports = {
-  getUser,
+  read,
+  update,
+  del,
 };
