@@ -40,7 +40,7 @@
     "express-pino-logger": "^4.0.0",
     "json-api-serializer": "^2.1.0",
     "json-schema-ref-parser": "^7.1.1",
-    "knex": "^0.17.1",
+    "knex": "^0.17.6",
     "mysql": "^2.17.1",
     "pino": "^5.12.5",
     "redis": "^2.8.0",
