@@ -9,10 +9,10 @@ module.exports = {
     connection: MYSQL_CONNECTION_STRING,
     pool: { min: 0, max: Number(MYSQL_CONNECTION_LIMIT) },
     migrations: {
-      directory: './migrations',
+      directory: './src/db/migrations',
     },
     seeds: {
-      directory: './seeds',
+      directory: './src/db/seeds',
     },
   },
   production: {
@@ -20,7 +20,7 @@ module.exports = {
     connection: MYSQL_CONNECTION_STRING,
     pool: { min: 0, max: Number(MYSQL_CONNECTION_LIMIT) },
     migrations: {
-      directory: './migrations',
+      directory: './src/db/migrations',
     },
   },
 };

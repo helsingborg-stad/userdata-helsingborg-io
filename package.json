@@ -9,8 +9,8 @@
     "test": "NODE_ENV=test nyc ./node_modules/.bin/mocha src/components/**/*.test.js",
     "test:watch": "NODE_ENV=test nyc ./node_modules/.bin/mocha src/components/**/*.test.js --watch",
     "lint": "./node_modules/.bin/eslint src/**/*.js",
-    "migrate:latest": "./node_modules/.bin/knex --cwd src/db/ migrate:latest",
-    "migrate:rollback": "./node_modules/.bin/knex --cwd src/db/ migrate:rollback",
+    "migrate:latest": "./node_modules/.bin/knex migrate:latest",
+    "migrate:rollback": "./node_modules/.bin/knex migrate:rollback",
     "seed:run": "./node_modules/.bin/knex seed:run",
     "setup": "node setup.js"
   },
