@@ -1,7 +1,7 @@
 const express = require('express');
 const dal = require('./user.dal');
 const pjson = require('../../../package.json');
-const { querySchema, postSchema } = require('./user.schema');
+const { querySchema, putSchema } = require('./user.schema');
 const Validator = require('../../middlewares/validator.middleware');
 
 
@@ -32,7 +32,7 @@ const routes = () => {
     return response;
   });
 
-  router.put('/user/:person_nr', Validator(postSchema, 'body', true), async (req, res) => {
+  router.put('/user/:person_nr', Validator(putSchema, 'body', true), async (req, res) => {
     const response = await dal.update.user(req, res);
     return response;
   });
