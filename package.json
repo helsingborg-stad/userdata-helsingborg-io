@@ -1,16 +1,16 @@
 {
   "name": "userdata-helsingborg-io",
   "version": "0.0.1",
-  "description": "Users Data project with Navet connection.",
+  "description": "Providing userdata trough navet connection and local db storage.",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=production node -r dotenv/config src/app.js",
-    "dev": "nodemon -r dotenv/config src/app.js | ./node_modules/.bin/pino-colada",
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha src/components/**/*.test.js",
-    "test:watch": "./node_modules/.bin/mocha src/components/**/*.test.js --watch",
-    "lint": "./node_modules/eslint/bin/eslint.js src/** --fix",
-    "migrate:latest": "./node_modules/.bin/knex migrate:latest",
-    "migrate:rollback": "./node_modules/.bin/knex migrate:rollback",
+    "start": "NODE_ENV=production node src/server.js",
+    "dev": "nodemon src/server.js | ./node_modules/.bin/pino-colada",
+    "test": "NODE_ENV=test nyc ./node_modules/.bin/mocha src/components/**/*.test.js",
+    "test:watch": "NODE_ENV=test nyc ./node_modules/.bin/mocha src/components/**/*.test.js --watch",
+    "lint": "./node_modules/.bin/eslint src/**/*.js",
+    "migrate:latest": "./node_modules/.bin/knex --cwd src/db/ migrate:latest",
+    "migrate:rollback": "./node_modules/.bin/knex --cwd src/db/ migrate:rollback",
     "seed:run": "./node_modules/.bin/knex seed:run",
     "setup": "node setup.js"
   },
@@ -25,6 +25,7 @@
     "eslint-plugin-import": "^2.17.2",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.0",
+    "nyc": "^14.1.1",
     "pino-colada": "^1.4.4"
   },
   "dependencies": {
@@ -37,8 +38,8 @@
     "easy-soap-request": "^2.5.0",
     "express": "^4.16.4",
     "express-pino-logger": "^4.0.0",
-    "json-schema-ref-parser": "^7.1.1",
     "json-api-serializer": "^2.1.0",
+    "json-schema-ref-parser": "^7.1.1",
     "knex": "^0.17.1",
     "mysql": "^2.17.1",
     "pino": "^5.12.5",
