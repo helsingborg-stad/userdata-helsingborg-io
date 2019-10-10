@@ -14,7 +14,7 @@ describe('User', () => {
 
   it('should return json on GET with faked query', async () => chai
     .request(server)
-    .get('/user')
+    .get('/api/v1/user')
     .send()
     .then((res) => {
       res.should.have.status(200);
@@ -24,7 +24,7 @@ describe('User', () => {
 
   it('should return json on GET with correct query params at fake', async () => chai
     .request(server)
-    .get('/user/195809262743')
+    .get('/api/v1/user/195809262743')
     .send()
     .then((res) => {
       res.should.have.status(200);
@@ -34,7 +34,7 @@ describe('User', () => {
 
   it('should allow PUT with valid body at fake', async () => chai
     .request(server)
-    .post('/user/195809262743')
+    .post('/api/v1/user/195809262743')
     .send({
       device_id: 'KILLERNAME123',
       telephone_nr: '0704838154',
@@ -50,7 +50,7 @@ describe('User', () => {
     const requester = chai.request(server).keepOpen();
 
     await requester
-      .post('/person')
+      .post('/api/v1/person')
       .send({
         person_nr: '197607012395',
         first_name: 'Fredrik',
@@ -64,7 +64,7 @@ describe('User', () => {
       });
 
     await requester
-      .get('/person/197607012395')
+      .get('/api/v1/person/197607012395')
       .send()
       .then((res) => {
         res.should.have.status(200);
