@@ -62,7 +62,7 @@ const getUser = async (req, res) => {
 
     // Fetch data from DB.
     const userFromDB = await query(id);
-    console.log(userFromDB.attributes);
+
     if (!userFromDB) {
       // Fetch data from Navet.
       const user = await getUserFromNavet(id);
