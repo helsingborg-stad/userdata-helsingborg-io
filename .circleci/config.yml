@@ -79,7 +79,7 @@ jobs:
       - image: circleci/node:12.3.1
       - image: circleci/mysql:5.7.26
         environment:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: userDataDB
           MYSQL_USER: user
           MYSQL_PASSWORD: password
