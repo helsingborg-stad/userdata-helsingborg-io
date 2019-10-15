@@ -35,7 +35,7 @@ describe('User', () => {
       res.should.be.json;
       should.exist(res.body);
     }));
-  /*
+
   it('should correctly add entity to db on POST and return the new entity on GET', async () => {
     const requester = chai.request(server).keepOpen();
 
@@ -66,5 +66,4 @@ describe('User', () => {
 
     requester.close();
   });
-  */
 });
