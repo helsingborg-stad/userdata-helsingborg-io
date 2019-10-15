@@ -110,6 +110,17 @@ jobs:
           key: node-v1-{{ checksum "package.json" }}-{{ arch }}
           paths:
             - node_modules
+
+      - run:
+          name: Migrate database
+          command: |
+            npm run migrate:latest
+
+      - run:
+          name: Seed database
+          command: |
+            npm run seed:run
+
       - run:
           name: Run application tests (mocha)
           command: |
