@@ -13,3 +13,9 @@ node_modules/
 
 # Ignore nyc istabul test logs 
 /.nyc_output
+
+# Ignore cert files
+/assets/certificates/public.crt
+/assets/certificates/private.key
+/assets/certificates/KommunA.key
+/assets/certificates/KommunA.crt
