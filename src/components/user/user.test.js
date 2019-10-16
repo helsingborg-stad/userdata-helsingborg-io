@@ -26,6 +26,7 @@ describe('User', () => {
     .request(server)
     .put('/api/v1/user/195809262743')
     .send({
+      person_nr: '195809262743',
       device_id: 'KILLERNAME123',
       telephone_nr: '0704838154',
       email: 'ylva.johansson@gmail.com',
@@ -35,22 +36,51 @@ describe('User', () => {
       res.should.be.json;
       should.exist(res.body);
     }));
-/*
-  it('should correctly add entity to db on POST and return the new entity on GET', async () => {
+  
+  it('should correctly update entity to db on PUT and return the updated entity on GET', async () => {
     const requester = chai.request(server).keepOpen();
 
     await requester
-      .post('/api/v1/user')
+      .put('/api/v1/user/195809262743')
       .send({
-        person_nr: '197607012395',
+        person_nr: '195809262743',
         first_name: 'Fredrik',
         last_name: 'Nobel',
-        email: null,
-        device_id: null,
-        telephone_nr: null,
+        email: 'fredrik.nobel@nobelstiftelsen.se',
+        device_id: 'TESTDEVICE01',
+        telephone_nr: '070000000',
         post_nr: '90737',
         post_ort: 'UMEÅ',
         adress: 'KLINTVÄGEN 19 LGH 1201',
+      }).then((res) => {
+        res.should.have.status(200);
+        res.should.be.json;
+      });
+
+    await requester
+      .get('/api/v1/user/195809262743')
+      .send()
+      .then((res) => {
+        res.should.have.status(200);
+        res.should.be.json;
+        should.exist(res.body);
+        res.body.data.attributes.should.have.property('person_nr');
+        res.body.data.attributes.person_nr.should.equal('195809262743');
+      });
+
+    requester.close();
+  });
+
+  it('should correctly create entity to db on unknown user GET and return the created entity on GET', async () => {
+    const requester = chai.request(server).keepOpen();
+
+    await requester
+      .get('/api/v1/user/197607012395')
+      .send()
+      .then((res) => {
+        res.should.have.status(200);
+        res.should.be.json;
+        should.exist(res.body);
       });
 
     await requester
@@ -60,11 +90,11 @@ describe('User', () => {
         res.should.have.status(200);
         res.should.be.json;
         should.exist(res.body);
-        res.body[0].should.have.property('person_nr');
-        res.body[0].person_id.should.equal('197607012395');
+        res.body.data.attributes.should.have.property('person_nr');
+        res.body.data.attributes.person_nr.should.equal('197607012395');
       });
 
     requester.close();
   });
-*/
+
 });

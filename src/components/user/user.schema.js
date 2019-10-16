@@ -16,6 +16,7 @@ const postSchema = Joi.object().keys({
 });
 
 const putSchema = Joi.object().keys({
+  person_nr: id.required(),
   first_name: Joi.string(),
   last_name: Joi.string(),
   email: Joi.string().email().lowercase(),
