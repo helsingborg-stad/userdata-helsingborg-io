@@ -11,7 +11,6 @@ const {
 
 const { NAVET_ENDPOINT, PFX, PASSPHRASE } = process.env;
 
-
 const axiosClient = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
@@ -48,7 +47,6 @@ const getUserFromNavet = async (id) => {
   }
 };
 
-
 /**
  * READ USER METHODS
  */
@@ -81,7 +79,6 @@ const read = {
   user: getUser,
 };
 
-
 /**
  * UPDATE USER METHODS
  */
@@ -109,7 +106,6 @@ const update = {
   user: updateUser,
 };
 
-
 /**
  * DELETE USER METHODS
  */
@@ -130,7 +126,6 @@ const deleteUser = async (req, res) => {
 const del = {
   ser: deleteUser,
 };
-
 
 module.exports = {
   read,
