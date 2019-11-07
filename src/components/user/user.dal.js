@@ -59,17 +59,21 @@ const getUser = async (req, res) => {
 
     // Fetch data from DB.
     const userFromDB = await query(id);
-    if (!userFromDB.status) return await createSuccessResponse(userFromDB, res, 'user', 'queryData');
 
-    const userFromNavet = await getUserFromNavet(id);
-    if (userFromNavet.status === 404) return createErrorResponse(userFromNavet, res);
+    if (!userFromDB) {
+      // Fetch data from Navet.
+      const user = await getUserFromNavet(id);
 
     // Save Data i DB
     await create(userFromNavet);
     const savedUser = await query(id);
 
+      // Convert response to json before sending it.
+      return await createSuccessResponse(savedUser, res, 'user', 'queryData');
+    }
+
     // Convert response to json before sending it.
-    return await createSuccessResponse(savedUser, res, 'user', 'queryData');
+    return await createSuccessResponse(userFromDB, res, 'user', 'queryData');
   } catch (error) {
     return createErrorResponse(error, res);
   }
