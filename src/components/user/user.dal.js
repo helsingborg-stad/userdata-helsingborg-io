@@ -1,7 +1,7 @@
 const axios = require('axios');
 const https = require('https');
 const fs = require('fs');
-const { ResourceNotFoundError, InternalServerError } = require('../../utils/error');
+const { ResourceNotFoundError } = require('../../utils/error');
 const {
   parseXml, parseJSONError, parseJSON, createErrorResponse, createSuccessResponse,
 } = require('../../utils/helpers');
@@ -15,7 +15,7 @@ const axiosClient = axios.create({
   httpsAgent: new https.Agent({
     rejectUnauthorized: false,
     pfx: fs.readFileSync(PFX),
-    PASSPHRASE,
+    passphrase: PASSPHRASE,
   }),
   headers: {
     'Content-Type': 'text/xml;charset=UTF-8',
@@ -30,8 +30,6 @@ const getUserFromNavet = async (id) => {
 
   try {
     const response = await axiosClient.post(NAVET_ENDPOINT, xml);
-    if (!response || !response.data) return ResourceNotFoundError();
-
     const data = await parseJSON(response.data);
     const res = data.Folkbokforingspost;
 
@@ -45,10 +43,9 @@ const getUserFromNavet = async (id) => {
     };
     return user;
   } catch (error) {
-    return new InternalServerError(parseJSONError(error.response.data));
+    return new ResourceNotFoundError(await parseJSONError(error.response.data));
   }
 };
-
 
 /**
  * READ USER METHODS
@@ -62,21 +59,17 @@ const getUser = async (req, res) => {
 
     // Fetch data from DB.
     const userFromDB = await query(id);
-    console.log(userFromDB.attributes);
-    if (!userFromDB) {
-      // Fetch data from Navet.
-      const user = await getUserFromNavet(id);
+    if (!userFromDB.status) return await createSuccessResponse(userFromDB, res, 'user', 'queryData');
 
-      // Save Data i DB
-      await create(user);
-      const savedUser = await query(id);
+    const userFromNavet = await getUserFromNavet(id);
+    if (userFromNavet.status === 404) return createErrorResponse(userFromNavet, res);
 
-      // Convert response to json before sending it.
-      return await createSuccessResponse(savedUser, res, 'user', 'queryData');
-    }
+    // Save Data i DB
+    await create(userFromNavet);
+    const savedUser = await query(id);
 
     // Convert response to json before sending it.
-    return await createSuccessResponse(userFromDB, res, 'user', 'queryData');
+    return await createSuccessResponse(savedUser, res, 'user', 'queryData');
   } catch (error) {
     return createErrorResponse(error, res);
   }
@@ -85,7 +78,6 @@ const getUser = async (req, res) => {
 const read = {
   user: getUser,
 };
-
 
 /**
  * UPDATE USER METHODS
@@ -114,7 +106,6 @@ const update = {
   user: updateUser,
 };
 
-
 /**
  * DELETE USER METHODS
  */
@@ -135,7 +126,6 @@ const deleteUser = async (req, res) => {
 const del = {
   ser: deleteUser,
 };
-
 
 module.exports = {
   read,
