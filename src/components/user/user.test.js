@@ -35,12 +35,12 @@ describe('User', () => {
       res.should.be.json;
       should.exist(res.body);
     }));
-/*
-  it('should correctly add entity to db on POST and return the new entity on GET', async () => {
+
+  it('should correctly add entity to db on PUT and return the new entity on GET', async () => {
     const requester = chai.request(server).keepOpen();
 
     await requester
-      .post('/api/v1/user')
+      .put('/api/v1/user')
       .send({
         person_nr: '197607012395',
         first_name: 'Fredrik',
@@ -66,5 +66,4 @@ describe('User', () => {
 
     requester.close();
   });
-*/
 });
