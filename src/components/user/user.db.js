@@ -40,8 +40,14 @@ const create = async (user) => {
 const erase = async (personNr) => {
   try {
     Users.where('person_nr', personNr).destroy()
-      .then((res) => { logger.info('success'); return res.json({ success: true }); })
-      .catch((e) => { logger.error('failed', e); return e; });
+      .then((res) => {
+        logger.info('success');
+        return res.json({ success: true });
+      })
+      .catch((e) => { 
+        logger.error('failed', e);
+        return e;
+      });
   } catch (e) {
     logger.error(e);
     throw e;
