@@ -12,6 +12,12 @@ describe('api/v1/user', () => {
     server.close();
   });
 
+  beforeEach(function (done) {
+    setTimeout(function(){
+      done();
+    }, 500);
+  });
+
   describe('GET /api/v1/user/:pnr', () => {
     it('should return json on GET with correct query params at fake', async () => chai
       .request(server)
@@ -49,9 +55,9 @@ describe('api/v1/user', () => {
           person_nr: '197607012395',
           first_name: 'Fredrik',
           last_name: 'Nobel',
-          email: null,
-          device_id: null,
-          telephone_nr: null,
+          email: 'fredrik.nobel@nobelstiftelsen.se',
+          device_id: 'mochatest',
+          telephone_nr: '0700000000',
           post_nr: '90737',
           post_ort: 'UMEÅ',
           adress: 'KLINTVÄGEN 19 LGH 1201',
@@ -69,6 +75,7 @@ describe('api/v1/user', () => {
           res.should.have.status(200);
           res.should.be.json;
           should.exist(res.body);
+          should.exist(res.body.data);
           should.exist(res.body.data.attributes);
           should.exist(res.body.data.attributes.person_nr);
           chai.expect(res.body.data.attributes.person_nr).to.equal('197607012395');
