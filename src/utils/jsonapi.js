@@ -5,6 +5,7 @@ const createLinksObject = req => ({
 const createRelationshipsObject = (resourceUrl, relations) => {
   const relationships = {};
 
+  // eslint-disable-next-line array-callback-return
   Object.keys(relations).map((key) => {
     const relation = relations[key];
 

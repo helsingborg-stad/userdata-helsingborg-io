@@ -10,7 +10,6 @@ const logger = require('./utils/logger');
 
 // Init App
 const app = express();
-const V1BASEPATH = '/api/v1';
 
 // Config
 const { PORT } = process.env;
@@ -43,7 +42,7 @@ app.get('/', (req, res) => res.send({
 }));
 
 // Add routes to the app.
-app.use(V1BASEPATH, routes());
+app.use('/api/v1', routes());
 
 // Swagger for documenting the api, access through localhost:xxxx/api-docs.
 jsonSchemaRefParser.dereference(swaggerDocument, (err, schema) => {
@@ -52,7 +51,7 @@ jsonSchemaRefParser.dereference(swaggerDocument, (err, schema) => {
   } else {
     // `schema` is just a normal JavaScript object that contains your entire JSON Schema,
     // including referenced files, combined into a single object
-    app.use(`${V1BASEPATH}/api-docs`, swaggerUi.serve, swaggerUi.setup(schema));
+    app.use('/api/v1/api-docs', swaggerUi.serve, swaggerUi.setup(schema));
   }
 });
 

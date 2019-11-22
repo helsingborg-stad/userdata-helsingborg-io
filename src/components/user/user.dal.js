@@ -124,7 +124,7 @@ const deleteUser = async (req, res) => {
 };
 
 const del = {
-  ser: deleteUser,
+  user: deleteUser,
 };
 
 module.exports = {
