@@ -19,7 +19,15 @@ const querySchema = Joi.object().keys({
   person_nr: id.required(),
 });
 
+
+const putSchema = Joi.object().keys({
+  email: Joi.string().email().lowercase(),
+  telephone_nr: Joi.string(),
+  device_id: Joi.string(),
+});
+
 module.exports = {
   querySchema,
   postSchema,
+  putSchema,
 };
